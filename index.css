@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  html, body {
+    height: 100%;
+    @apply text-default;
+  }
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+.bottom-line::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  height: 1px;
+  background: #F0F0F0;
+}
+
+.top-line::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 1px;
+  background: #F0F0F0;
+}
+
+.left-line::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  width: 1px;
+  background: #F0F0F0;
+}
+
+.right-line::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  width: 1px;
+  background: #F0F0F0;
+}

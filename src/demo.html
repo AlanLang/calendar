@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .header {
+      height: 300px;
+      /* Add any additional styling for the header */
+    }
+
+    .content {
+      flex: 1; /* This will make the .content fill the remaining space */
+      overflow-y: auto; /* Enables vertical scrollbar if content overflows */
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sub-header {
+      /* Height can be fixed or flexible, based on your needs */
+      height: 50px;
+      /* Add any additional styling for your sub-header */
+    }
+
+    .scrollable-section {
+      flex: 1; /* Takes remaining space after .sub-header */
+      overflow-y: auto; /* Enables vertical scrollbar if content overflows */
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="container">
+    <div class="header">Header content here</div>
+    <div class="content">
+      <div class="sub-header">Sub-header content here</div>
+      <div class="scrollable-section">
+        <div style="height: 50000px;">Extra long content here</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const a = document.querySelector('.scrollable-section');
+    a.addEventListener('scroll', () => {
+      console.log(a.scrollTop, a.scrollHeight, a.clientHeight);
+    });
+  </script>
+</body>
+</html>
