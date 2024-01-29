@@ -17,23 +17,23 @@ pub fn MiniCalendar(
 
         <Show when=move || { show_reset.get() }>
           <button
-            class="w-[20px] h-[20px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+            class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
             on:click=move |_| on_reset.call(())
           >
-            <ArrowArcLeft color="#999999" size="11px"/>
+            <ArrowArcLeft size="11px"/>
           </button>
         </Show>
         <button
-          class="w-[20px] h-[20px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
           on:click=move |_| on_switch_page.call(false)
         >
-          <CaretUp color="#999999" size="11px"/>
+          <CaretUp size="11px"/>
         </button>
         <button
-          class="w-[20px] h-[20px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
           on:click=move |_| on_switch_page.call(true)
         >
-          <CaretDown color="#999999" size="11px"/>
+          <CaretDown size="11px"/>
         </button>
       </div>
       <div class="w-full grid grid-cols-7 text-sm gap-1">

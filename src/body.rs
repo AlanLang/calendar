@@ -75,17 +75,17 @@ pub fn Content() -> impl IntoView {
           Today
         </button>
         <button
-          class="w-[20px] h-[20px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
+          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
           on:click=move |_e| { app.prev_mount() }
         >
 
-          <CaretUp color="#999999" size="15px"/>
+          <CaretUp size="15px"/>
         </button>
         <button
-          class="w-[20px] h-[20px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
+          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
           on:click=move |_e| { app.next_mount() }
         >
-          <CaretDown color="#999999" size="15px"/>
+          <CaretDown size="15px"/>
         </button>
       </div>
       <div class="px-6 text-2xl font-medium tracking-tight overflow-hidden">
