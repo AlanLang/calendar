@@ -22,7 +22,7 @@ pub struct Holiday {
   pub is_off_day: bool,
 }
 
-async fn fetch_holidays(year: String) -> Result<Vec<Holiday>> {
+pub async fn fetch_holidays(year: String) -> Result<Vec<Holiday>> {
   let url = format!(
     "https://raw.githubusercontent.com/NateScarlet/holiday-cn/master/{}.json",
     year

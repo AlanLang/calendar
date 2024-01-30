@@ -3,9 +3,8 @@ use chrono::{Datelike, Local, NaiveDate, NaiveDateTime};
 use gloo::console::info;
 use leptos::{spawn_local, RwSignal, SignalGet, SignalGetUntracked, SignalSet};
 
-use crate::{
-  event::{create_holiday_events, fetch_holiday_events, EventGroup, CHINESE_HOLIDAYS_NAME},
-  holiday,
+use crate::event::{
+  create_holiday_events, fetch_holiday_events, EventGroup, CHINESE_HOLIDAYS_NAME,
 };
 
 #[derive(Debug, PartialEq, Clone, Copy)]
@@ -34,26 +33,7 @@ pub struct Day {
   pub timestamp: i64,
   pub day_in_month: bool,
   pub is_weekend: bool,
-  pub lunar: LunisolarDate
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy, Default)]
-pub struct LunarDate {
-  pub year: i32,
-  pub month: i32,
-  pub day: i32,
-  pub is_leap: bool,
-}
-
-impl LunarDate {
-  fn new(year: i32, month: i32, day: i32, is_leap: bool) -> Self {
-    Self {
-      year,
-      month,
-      day,
-      is_leap,
-    }
-  }
+  pub lunar: LunisolarDate,
 }
 
 impl Default for App {
@@ -262,9 +242,6 @@ fn nearest_multiple_of_six(number: f64) -> i64 {
 
 #[cfg(test)]
 mod tests {
-  use core::time;
-
-  // Note this useful idiom: importing names from outer (for mod tests) scope.
   use super::*;
 
   #[test]

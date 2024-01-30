@@ -1,7 +1,8 @@
 use log::info;
 use serde::{Deserialize, Serialize};
 
-use crate::fetch_holidays;
+use crate::holiday::fetch_holidays;
+
 pub const CHINESE_HOLIDAYS_NAME: &str = "中国节假日";
 
 #[derive(Debug, PartialEq, Eq, Clone, Default, Serialize, Deserialize)]
