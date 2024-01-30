@@ -21,19 +21,7 @@ pub struct App {
   pub content_height: f64,
   week_timestamp: i64,
   pub events: RwSignal<Vec<RwSignal<EventGroup>>>,
-}
-
-#[derive(Debug, PartialEq, Eq, Clone, Copy)]
-pub struct Day {
-  pub key: i64,
-  pub year: i32,
-  pub month: u32,
-  pub day: u32,
-  pub date: NaiveDate,
-  pub timestamp: i64,
-  pub day_in_month: bool,
-  pub is_weekend: bool,
-  pub lunar: LunisolarDate,
+  pub selected_day: RwSignal<Day>,
 }
 
 impl Default for App {
@@ -71,6 +59,7 @@ impl Default for App {
       week_timestamp,
       scroll_top: RwSignal::new(0),
       events: RwSignal::new(vec![RwSignal::new(create_holiday_events())]),
+      selected_day: RwSignal::new(Day::new(today, true)),
     };
     app.update_scroll_top();
     let events = app.events.get_untracked();
@@ -181,6 +170,46 @@ impl App {
     self.month.set(month);
     self.generate_days();
   }
+
+  pub fn set_selected_day(&self, day: Day) {
+    self.selected_day.set(day);
+  }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct Day {
+  pub key: i64,
+  pub year: i32,
+  pub month: u32,
+  pub day: u32,
+  pub date: NaiveDate,
+  pub timestamp: i64,
+  pub day_in_month: bool,
+  pub is_weekend: bool,
+  pub lunar: LunisolarDate,
+}
+
+impl Day {
+  pub fn new(day: NaiveDate, day_in_month: bool) -> Self {
+    let mut index = 0;
+    if day_in_month {
+      index = 1;
+    }
+    let timestamp = day.and_hms_opt(0, 0, 0).unwrap().timestamp_millis();
+    let key = index as i64 + timestamp * 10;
+    let lunisolar_date = LunisolarDate::from_date(day).unwrap();
+    Day {
+      year: day.year(),
+      month: day.month(),
+      day: day.day(),
+      date: day,
+      day_in_month,
+      timestamp,
+      key,
+      is_weekend: day.weekday() == chrono::Weekday::Sat || day.weekday() == chrono::Weekday::Sun,
+      lunar: lunisolar_date,
+    }
+  }
 }
 
 pub fn get_start_date(date: NaiveDate) -> NaiveDate {
@@ -204,24 +233,7 @@ pub fn generate_days(show_date: NaiveDate) -> Vec<Day> {
   for i in 0..112 {
     let day = start_date + chrono::Duration::days(i);
     let day_in_month = day.month() == show_date.month();
-    let mut index = 0;
-    if day_in_month {
-      index = 1;
-    }
-    let timestamp = day.and_hms_opt(0, 0, 0).unwrap().timestamp_millis();
-    let key = index as i64 + timestamp * 10;
-    let lunisolar_date = LunisolarDate::from_date(day).unwrap();
-    days.push(Day {
-      year: day.year(),
-      month: day.month(),
-      day: day.day(),
-      date: day,
-      day_in_month,
-      timestamp,
-      key,
-      is_weekend: day.weekday() == chrono::Weekday::Sat || day.weekday() == chrono::Weekday::Sun,
-      lunar: lunisolar_date,
-    });
+    days.push(Day::new(day, day_in_month));
   }
   days
 }

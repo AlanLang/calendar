@@ -2,7 +2,7 @@ use chinese_lunisolar_calendar::LunarDay;
 use chrono::Datelike;
 use leptos::{html::Div, *};
 use phosphor_leptos::{CaretDown, CaretUp};
-use web_sys::{ScrollBehavior, ScrollToOptions};
+use web_sys::{MouseEvent, ScrollBehavior, ScrollToOptions};
 
 use crate::app::{App, Day};
 
@@ -135,8 +135,20 @@ pub fn Content() -> impl IntoView {
 
 #[component]
 pub fn CalendarDay(day: Day) -> impl IntoView {
+  let app = use_context::<App>().expect("there to be a `count` signal provided");
+
+  let node_ref = create_node_ref::<Div>();
+  let handle_click = move |_e: MouseEvent| {
+    app.set_selected_day(day.clone());
+  };
+
   view! {
-    <div class="text-base p-2 relative top-line" style=get_day_content_style(&day)>
+    <div
+      class="text-base p-2 relative top-line"
+      style=get_day_content_style(&day)
+      node_ref=node_ref
+      on:click=handle_click
+    >
       <div class="flex justify-between items-center" style=get_day_style(&day)>
         <div class="">{get_lunar_day_text(&day)}</div>
         <div

@@ -68,7 +68,7 @@ pub fn Menu() -> impl IntoView {
 pub fn EventItem(value: RwSignal<EventGroup>) -> impl IntoView {
   let event_style = create_memo(move |_| {
     format!(
-      "background-color: {:?};border-radius: 3px;",
+      "background-color: {};border-radius: 3px;",
       value.get().color
     )
   });
