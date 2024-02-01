@@ -54,3 +54,7 @@
   width: 1px;
   background: #F0F0F0;
 }
+
+.day-selected {
+  background-color: red;
+}

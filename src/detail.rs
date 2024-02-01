@@ -16,6 +16,23 @@ pub fn DetailPanel() -> impl IntoView {
     )
   };
 
+  let distance_today_text = move || {
+    let today = chrono::Local::now().naive_local();
+    let distance = app
+      .selected_day
+      .get()
+      .date
+      .signed_duration_since(today.into())
+      .num_days();
+    match distance {
+      0 => "今天".to_string(),
+      1 => "明天".to_string(),
+      -1 => "昨天".to_string(),
+      d if d > 0 => format!("{} 天后", d),
+      d => format!("{} 天前", -d),
+    }
+  };
+
   view! {
     <div class="py-8 text-sm">
       <div class="px-2">
@@ -28,7 +45,7 @@ pub fn DetailPanel() -> impl IntoView {
         </div>
       </div>
       <div class="px-2">
-        <div class="">今天</div>
+        <div class="">{move || distance_today_text()}</div>
       </div>
     </div>
   }
