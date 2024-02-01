@@ -21,7 +21,7 @@ js-sys = "0.3.66"
 wasm-bindgen = { version="0.2.89", features = ["serde-serialize"] }
 wasm-bindgen-futures = "0.4.39"
 wasm-bindgen-console-logger = "0.1.1"
-web-sys = { version = "0.3.66", features = ["Window", "AddEventListenerOptions", "HtmlElement", "ScrollToOptions", "ScrollBehavior", "Animation", "Element"] }
+web-sys = { version = "0.3.66", features = ["Window", "AddEventListenerOptions", "HtmlElement", "ScrollToOptions", "ScrollBehavior"] }
 gloo-net = "0.5.0"
 chrono = "0.4"
 chinese-lunisolar-calendar = "0.2.0"

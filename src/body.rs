@@ -150,13 +150,13 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
       on:click=handle_click
     >
       <div class="flex justify-between items-center" style=get_day_style(&day)>
-        <div class="">{get_lunar_day_text(&day)}</div>
         <div
           class="rounded w-[25px] h-[25px] flex items-center justify-center"
           style=get_day_num_style(&day)
         >
           {get_day_text(&day)}
         </div>
+        <div class="text-gray-400">{get_lunar_day_text(&day)}</div>
       </div>
     </div>
   }
