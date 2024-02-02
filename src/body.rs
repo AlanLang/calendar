@@ -1,7 +1,8 @@
 use chinese_lunisolar_calendar::LunarDay;
 use chrono::Datelike;
+use icondata as i;
 use leptos::{html::Div, *};
-use phosphor_leptos::{CaretDown, CaretUp};
+use leptos_icons::Icon;
 use web_sys::{MouseEvent, ScrollBehavior, ScrollToOptions};
 
 use crate::app::{App, Day};
@@ -72,17 +73,17 @@ pub fn Content() -> impl IntoView {
           Today
         </button>
         <button
-          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
+          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150 text-lg"
           on:click=move |_e| { app.prev_mount() }
         >
 
-          <CaretUp size="15px"/>
+          <Icon icon=i::BsChevronUp/>
         </button>
         <button
-          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150"
+          class="w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition active:bg-gray-150 text-lg"
           on:click=move |_e| { app.next_mount() }
         >
-          <CaretDown size="15px"/>
+          <Icon icon=i::BsChevronDown/>
         </button>
       </div>
       <div class="px-6 text-2xl font-medium tracking-tight overflow-hidden">
