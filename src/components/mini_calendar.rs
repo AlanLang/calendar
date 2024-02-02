@@ -1,6 +1,7 @@
 use chrono::Datelike;
+use icondata as i;
 use leptos::*;
-use phosphor_leptos::{ArrowArcLeft, CaretDown, CaretUp};
+use leptos_icons::Icon;
 
 use crate::app::Day;
 
@@ -17,23 +18,23 @@ pub fn MiniCalendar(
 
         <Show when=move || { show_reset.get() }>
           <button
-            class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+            class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition text-sm"
             on:click=move |_| on_reset.call(())
           >
-            <ArrowArcLeft size="11px"/>
+            <Icon icon=i::RiArrowGoBackArrowsLine/>
           </button>
         </Show>
         <button
-          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition text-sm"
           on:click=move |_| on_switch_page.call(false)
         >
-          <CaretUp size="11px"/>
+          <Icon icon=i::BsChevronUp/>
         </button>
         <button
-          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition"
+          class="w-[20px] h-[20px] text-gray-400 flex items-center justify-center rounded hover:text-gray-600 hover:bg-object-highlight-bg-emphasized active:bg-gray-150 hover:transition text-sm"
           on:click=move |_| on_switch_page.call(true)
         >
-          <CaretDown size="11px"/>
+          <Icon icon=i::BsChevronDown/>
         </button>
       </div>
       <div class="w-full grid grid-cols-7 text-sm gap-1">
