@@ -66,14 +66,18 @@ pub fn Menu() -> impl IntoView {
 
 #[component]
 pub fn EventItem(value: RwSignal<EventGroup>) -> impl IntoView {
+  let event_style = create_memo(move |_| {
+    format!(
+      "background-color: {};border-radius: 3px;",
+      value.get().color
+    )
+  });
+
   view! {
     <div class="h-[28px] p-1 px-2 text-sm text-default-subdued ">
       <div class="gap-1 p-1 flex items-center rounded hover:bg-object-highlight-bg-emphasized hover:transition">
         <div class="h-[16px] w-[16px] flex items-center justify-center">
-          <div
-            class="h-[10px] w-[10px]"
-            style=format!("background-color: {};border-radius: 3px;", value.get().color)
-          ></div>
+          <div class="h-[10px] w-[10px]" style=event_style></div>
         </div>
         <div class="">{move || value.get().name}</div>
       </div>
