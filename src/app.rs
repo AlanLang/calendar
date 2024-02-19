@@ -174,6 +174,12 @@ impl App {
   pub fn set_selected_day(&self, day: Day) {
     self.selected_day.set(day);
   }
+
+  pub fn set_selected_day_by_key(&self, key: i64) {
+    if let Some(day) = self.days.get_untracked().iter().find(|d| d.key == key) {
+      self.selected_day.set(day.clone());
+    }
+  }
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]

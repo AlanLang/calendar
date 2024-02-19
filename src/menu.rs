@@ -47,6 +47,10 @@ pub fn Menu() -> impl IntoView {
           on_reset=move |_| {
               app.go_to_today();
           }
+
+          on_click=move |day: i64| {
+              app.set_selected_day_by_key(day);
+          }
         />
 
       </div>

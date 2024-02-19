@@ -11,6 +11,7 @@ pub fn MiniCalendar(
   show_reset: Memo<bool>,
   #[prop(into)] on_switch_page: Callback<bool>,
   #[prop(into)] on_reset: Callback<()>,
+  #[prop(into)] on_click: Callback<i64>,
 ) -> impl IntoView {
   view! {
     <div class="font-sans">
@@ -57,7 +58,9 @@ pub fn MiniCalendar(
           <div
             class="text-center text-body w-[23px] h-[23px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition"
             style=get_day_style(&child)
+            on:click=move |_| on_click.call(child.key)
           >
+
             {child.day}
           </div>
         </For>
