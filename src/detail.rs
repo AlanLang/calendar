@@ -10,7 +10,9 @@ pub fn DetailPanel() -> impl IntoView {
   let lunisolar_date = move || day().lunar;
   let lunar_day_text = move || {
     format!(
-      "{:#}{:#}",
+      "{:#}{:#}年 {:#}{:#}",
+      lunisolar_date().to_lunar_year(),
+      lunisolar_date().to_lunar_year().to_zodiac(),
       lunisolar_date().to_lunar_month(),
       lunisolar_date().to_lunar_day()
     )

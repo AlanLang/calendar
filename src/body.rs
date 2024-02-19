@@ -1,6 +1,5 @@
 use chinese_lunisolar_calendar::LunarDay;
 use chrono::Datelike;
-use gloo::timers::callback::Timeout;
 use icondata as i;
 use leptos::{html::Div, *};
 use leptos_icons::Icon;
@@ -111,11 +110,7 @@ pub fn Content() -> impl IntoView {
           node_ref=body_ref
         >
           <div class="relative" style=format!("height: {}px;", app.global_height)>
-            <For
-              each=move || days.get()
-              key=|day| day.first().unwrap().key + day.last().unwrap().key
-              let:week
-            >
+            <For each=move || days.get() key=|day| day.first().unwrap().timestamp let:week>
               <div
                 class="bottom-line grid grid-cols-7 absolute top-0 left-0 right-0 transition-all"
                 data-timestamp=week[0].timestamp
@@ -127,7 +122,7 @@ pub fn Content() -> impl IntoView {
                 )
               >
 
-                <For each=move || week.clone() key=|day| day.key let:day>
+                <For each=move || week.clone() key=|day| day.timestamp let:day>
                   <CalendarDay day=day/>
                 </For>
               </div>
@@ -155,7 +150,7 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
       style=get_day_content_style(&day)
       on:click=handle_click
     >
-      <div class="flex justify-between items-center" style=get_day_style(&day)>
+      <div class="flex justify-between items-center">
         <div class="rounded w-[25px] h-[25px] flex items-center justify-center" style=day_num_style>
           {get_day_text(&day)}
         </div>
@@ -163,14 +158,6 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
       </div>
 
     </div>
-  }
-}
-
-fn get_day_style(day: &Day) -> String {
-  if day.day_in_month {
-    return "".to_string();
-  } else {
-    return "opacity: 0.25;".to_string();
   }
 }
 
@@ -184,12 +171,17 @@ fn get_day_content_style(day: &Day) -> String {
 
 fn get_day_num_style(day: &Day, selected_day: leptos::RwSignal<Day>) -> String {
   let today = chrono::Local::now().naive_local();
+  let mut style = String::new();
   if day.year == today.year() && day.month == today.month() && day.day == today.day() {
-    return "background-color: #F04842; color:#FFF".to_string();
+    style.push_str("background-color: #F04842; color:#FFF;");
   } else if day.timestamp == selected_day.get().timestamp {
-    return "background-color: #475569; color:#FFF".to_string();
+    style.push_str("background-color: #475569; color:#FFF;");
+  } else if day.day == 1 {
+    style.push_str(
+      "text-decoration: underline; text-decoration-color: #F04842; text-underline-offset:0.3em; text-decoration-thickness: 2px",
+    );
   }
-  "".to_string()
+  style
 }
 
 fn get_lunar_day_text(day: &Day) -> String {

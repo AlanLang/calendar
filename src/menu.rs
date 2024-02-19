@@ -1,23 +1,12 @@
-use chrono::Datelike;
 use leptos::*;
 
 use crate::{
-  app::{filter_calendar_by_year_month, App},
-  components::mini_calendar::MiniCalendar,
-  event::EventGroup,
-  icons::menu::MenuIcon,
+  app::App, components::mini_calendar::MiniCalendar, event::EventGroup, icons::menu::MenuIcon,
 };
 
 #[component]
 pub fn Menu() -> impl IntoView {
   let app = use_context::<App>().expect("there to be a `count` signal provided");
-  let days = create_memo(move |_| {
-    filter_calendar_by_year_month(app.days.get(), app.year.get(), app.month.get())
-  });
-  let show_reset = create_memo(move |_| {
-    let today = chrono::Local::now().naive_local();
-    today.year() != app.year.get() || today.month() != app.month.get()
-  });
 
   view! {
     <div class="bg-material-base flex flex-col overflow-hidden">
@@ -33,25 +22,7 @@ pub fn Menu() -> impl IntoView {
         </div>
       </div>
       <div class="border-b p-2">
-        <MiniCalendar
-          value=days
-          show_reset=show_reset
-          on_switch_page=move |is_next: bool| {
-              if is_next {
-                  app.next_mount();
-              } else {
-                  app.prev_mount();
-              }
-          }
-
-          on_reset=move |_| {
-              app.go_to_today();
-          }
-
-          on_click=move |day: i64| {
-              app.set_selected_day_by_key(day);
-          }
-        />
+        <MiniCalendar/>
 
       </div>
       <div class="">
