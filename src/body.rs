@@ -1,5 +1,6 @@
 use chinese_lunisolar_calendar::LunarDay;
 use chrono::Datelike;
+use gloo::timers::callback::Timeout;
 use icondata as i;
 use leptos::{html::Div, *};
 use leptos_icons::Icon;
@@ -141,24 +142,35 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
   let node_ref = create_node_ref::<Div>();
   let handle_click = move |_e: MouseEvent| {
     app.set_selected_day(day.clone());
+    if let Some(node) = node_ref.get() {
+      let result = node.class_list().add_1("day-selected");
+      if result.is_ok() {
+        Timeout::new(1_000, move || {
+          let _ = node.class_list().remove_1("day-selected");
+        })
+        .forget();
+      }
+    }
   };
 
   view! {
     <div
-      class="text-base p-2 relative top-line"
+      class="text-base relative top-line"
       style=get_day_content_style(&day)
-      node_ref=node_ref
       on:click=handle_click
     >
-      <div class="flex justify-between items-center" style=get_day_style(&day)>
-        <div
-          class="rounded w-[25px] h-[25px] flex items-center justify-center"
-          style=get_day_num_style(&day)
-        >
-          {get_day_text(&day)}
+      <div class="h-full w-full p-2 transition" node_ref=node_ref>
+        <div class="flex justify-between items-center" style=get_day_style(&day)>
+          <div
+            class="rounded w-[25px] h-[25px] flex items-center justify-center"
+            style=get_day_num_style(&day)
+          >
+            {get_day_text(&day)}
+          </div>
+          <div class="text-gray-400">{get_lunar_day_text(&day)}</div>
         </div>
-        <div class="text-gray-400">{get_lunar_day_text(&day)}</div>
       </div>
+
     </div>
   }
 }
