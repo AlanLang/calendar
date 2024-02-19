@@ -74,7 +74,7 @@ fn DayView(day: Day) -> impl IntoView {
     <div
       class="text-center text-body w-[23px] h-[23px] flex items-center justify-center rounded hover:bg-object-highlight-bg-emphasized hover:transition"
       style=day_style
-      on:click=move |_| app.set_selected_day(day.clone())
+      on:click=move |_| app.set_selected_day(day)
     >
 
       {day.day}
@@ -85,10 +85,10 @@ fn DayView(day: Day) -> impl IntoView {
 fn get_day_style(day: &Day, day_in_month: bool) -> String {
   let today = chrono::Local::now().naive_local();
   if day.year == today.year() && day.month == today.month() && day.day == today.day() {
-    return "background-color: #F04842;color:#FFF".to_string();
+    "background-color: #F04842;color:#FFF".to_string()
   } else if day_in_month {
-    return "".to_string();
+    "".to_string()
   } else {
-    return "opacity: 0.25;".to_string();
+    "opacity: 0.25;".to_string()
   }
 }

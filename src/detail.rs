@@ -47,7 +47,7 @@ pub fn DetailPanel() -> impl IntoView {
         </div>
       </div>
       <div class="px-2">
-        <div class="">{move || distance_today_text()}</div>
+        <div class="">{distance_today_text}</div>
       </div>
     </div>
   }

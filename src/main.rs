@@ -28,9 +28,9 @@ fn App() -> impl IntoView {
 
   let style = move || {
     if app.show_left_menu.get() {
-      return "grid-template-columns: 208px 1fr 300px;";
+      "grid-template-columns: 208px 1fr 300px;"
     } else {
-      return "grid-template-columns: 0px 1fr 300px;";
+      "grid-template-columns: 0px 1fr 300px;"
     }
   };
 

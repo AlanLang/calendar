@@ -139,7 +139,7 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
   let app = use_context::<App>().expect("there to be a `count` signal provided");
 
   let handle_click = move |_e: MouseEvent| {
-    app.set_selected_day(day.clone());
+    app.set_selected_day(day);
   };
 
   let day_num_style = create_memo(move |_| get_day_num_style(&day, app.selected_day));
@@ -163,9 +163,9 @@ pub fn CalendarDay(day: Day) -> impl IntoView {
 
 fn get_day_content_style(day: &Day) -> String {
   if day.is_weekend {
-    return "background: #FCFCFC".to_string();
+    "background: #FCFCFC".to_string()
   } else {
-    return "".to_string();
+    "".to_string()
   }
 }
 
@@ -194,8 +194,8 @@ fn get_lunar_day_text(day: &Day) -> String {
 
 fn get_day_text(day: &Day) -> String {
   if day.day == 1 {
-    return format!("{}月", day.month);
+    format!("{}月", day.month)
   } else {
-    return format!("{}", day.day);
+    format!("{}", day.day)
   }
 }

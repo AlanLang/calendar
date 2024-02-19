@@ -69,10 +69,9 @@ impl Default for App {
       .unwrap();
     let holiday_events = holiday.get_untracked().events;
     // 如果没有当前年份的事件
-    if holiday_events
+    if !holiday_events
       .into_iter()
       .any(|e| e.day.starts_with(&year.to_string()))
-      == false
     {
       spawn_local(async move {
         let es = fetch_holiday_events(year.to_string()).await;
@@ -95,8 +94,7 @@ impl App {
 
   pub fn get_scroll_to_day(&self, top: i32) -> Option<NaiveDateTime> {
     let timestamp = (top as i64 + self.item_height * 2) * self.rate + self.start_timestamp;
-    let date = chrono::NaiveDateTime::from_timestamp_opt(timestamp / 1000, 0);
-    date
+    chrono::NaiveDateTime::from_timestamp_opt(timestamp / 1000, 0)
   }
 
   fn update_scroll_top(&self) {
@@ -238,8 +236,7 @@ pub fn filter_calendar_by_year_month(days: Vec<Day>, year: i32, month: u32) -> V
 }
 
 fn nearest_multiple_of_six(number: f64) -> i64 {
-  let nearest_multiple = (number / 6.0).round() as i64 * 6;
-  nearest_multiple
+  (number / 6.0).round() as i64 * 6
 }
 
 #[cfg(test)]

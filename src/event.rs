@@ -39,7 +39,7 @@ pub async fn fetch_holiday_events(year: String) -> Vec<Event> {
   if let Ok(days) = days {
     for day in days {
       let mut name = day.name.clone();
-      if day.is_off_day == false {
+      if !day.is_off_day {
         name.push_str(" (补班)");
       }
       let event = Event {
