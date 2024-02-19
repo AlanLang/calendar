@@ -56,5 +56,17 @@
 }
 
 .day-selected {
-  background-color: red;
+  animation: color-change 1s linear none;
+}
+
+@keyframes color-change {
+  0% {
+    background-color: #ffffff;
+  }
+  50% {
+    background-color: #fecaca;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }
