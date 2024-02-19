@@ -111,7 +111,11 @@ pub fn Content() -> impl IntoView {
           node_ref=body_ref
         >
           <div class="relative" style=format!("height: {}px;", app.global_height)>
-            <For each=move || days.get() key=|day| day[0].key let:week>
+            <For
+              each=move || days.get()
+              key=|day| day.first().unwrap().key + day.last().unwrap().key
+              let:week
+            >
               <div
                 class="bottom-line grid grid-cols-7 absolute top-0 left-0 right-0 transition-all"
                 data-timestamp=week[0].timestamp
@@ -182,7 +186,7 @@ fn get_day_num_style(day: &Day, selected_day: leptos::RwSignal<Day>) -> String {
   let today = chrono::Local::now().naive_local();
   if day.year == today.year() && day.month == today.month() && day.day == today.day() {
     return "background-color: #F04842; color:#FFF".to_string();
-  } else if day.key == selected_day.get().key {
+  } else if day.timestamp == selected_day.get().timestamp {
     return "background-color: #475569; color:#FFF".to_string();
   }
   "".to_string()
