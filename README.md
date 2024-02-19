@@ -13,3 +13,10 @@ git clone https://github.com/AlanLang/calendar.git
 # 启动开发环境
 trunk serve
 ```
+
+## 功能
+* [x] 月历
+* [x] 农历
+* [x] 距离日
+* [ ] 节假日
+* [ ] 自定义事件
