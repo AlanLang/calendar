@@ -139,36 +139,23 @@ pub fn Content() -> impl IntoView {
 pub fn CalendarDay(day: Day) -> impl IntoView {
   let app = use_context::<App>().expect("there to be a `count` signal provided");
 
-  let node_ref = create_node_ref::<Div>();
   let handle_click = move |_e: MouseEvent| {
     app.set_selected_day(day.clone());
-    if let Some(node) = node_ref.get() {
-      let result = node.class_list().add_1("day-selected");
-      if result.is_ok() {
-        Timeout::new(1_000, move || {
-          let _ = node.class_list().remove_1("day-selected");
-        })
-        .forget();
-      }
-    }
   };
+
+  let day_num_style = create_memo(move |_| get_day_num_style(&day, app.selected_day));
 
   view! {
     <div
-      class="text-base relative top-line"
+      class="text-base p-2 relative top-line"
       style=get_day_content_style(&day)
       on:click=handle_click
     >
-      <div class="h-full w-full p-2 transition" node_ref=node_ref>
-        <div class="flex justify-between items-center" style=get_day_style(&day)>
-          <div
-            class="rounded w-[25px] h-[25px] flex items-center justify-center"
-            style=get_day_num_style(&day)
-          >
-            {get_day_text(&day)}
-          </div>
-          <div class="text-gray-400">{get_lunar_day_text(&day)}</div>
+      <div class="flex justify-between items-center" style=get_day_style(&day)>
+        <div class="rounded w-[25px] h-[25px] flex items-center justify-center" style=day_num_style>
+          {get_day_text(&day)}
         </div>
+        <div class="text-gray-400">{get_lunar_day_text(&day)}</div>
       </div>
 
     </div>
@@ -191,10 +178,12 @@ fn get_day_content_style(day: &Day) -> String {
   }
 }
 
-fn get_day_num_style(day: &Day) -> String {
+fn get_day_num_style(day: &Day, selected_day: leptos::RwSignal<Day>) -> String {
   let today = chrono::Local::now().naive_local();
   if day.year == today.year() && day.month == today.month() && day.day == today.day() {
     return "background-color: #F04842; color:#FFF".to_string();
+  } else if day.key == selected_day.get().key {
+    return "background-color: #475569; color:#FFF".to_string();
   }
   "".to_string()
 }
