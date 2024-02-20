@@ -10,6 +10,7 @@ pub struct EventGroup {
   pub name: String,
   pub color: String,
   pub events: Vec<Event>,
+  pub editable: bool,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Default, Serialize, Deserialize)]
@@ -30,6 +31,7 @@ pub fn create_holiday_events() -> EventGroup {
     name: CHINESE_HOLIDAYS_NAME.to_string(),
     color: "#00d48a".to_string(),
     events: Vec::new(),
+    editable: false,
   }
 }
 

@@ -127,8 +127,22 @@ pub fn Content() -> impl IntoView {
 pub fn CalendarWeek(week: Vec<Day>) -> impl IntoView {
   let app = use_context::<App>().expect("there to be a `count` signal provided");
   let first_day = week.clone().into_iter().next().unwrap();
-  let events =
-    create_memo(move |_| get_events(first_day.date, app.events.get().first().unwrap().get()));
+
+  let events_list_view = create_memo(move |_| {
+    app
+      .events
+      .get()
+      .into_iter()
+      .map(|e| {
+        let events = get_events(first_day.date, e.get());
+        view! {
+          <For each=move || events.clone() key=|event| event.name.clone() let:event>
+            <EventView event=event/>
+          </For>
+        }
+      })
+      .collect_view()
+  });
 
   view! {
     <div
@@ -145,23 +159,22 @@ pub fn CalendarWeek(week: Vec<Day>) -> impl IntoView {
       <For each=move || week.clone() key=|day| day.timestamp let:day>
         <CalendarDay day=day/>
       </For>
-      <div class="absolute top-9 left-0 right-0 text-sm grid grid-cols-7">
-        <For each=move || events.get() key=|event| event.name.clone() let:event>
-          <EventView event=event/>
-        </For>
-      </div>
+      <div class="absolute top-10 left-0 right-0 text-sm grid grid-cols-7">{events_list_view}</div>
     </div>
   }
 }
 
 #[component]
 pub fn EventView(event: EventInfo) -> impl IntoView {
-  let style = format!(
+  let mut style = format!(
     "background-color: {}; color: #FFF; grid-column: {} / {};",
     event.color, event.start, event.end
   );
+  if event.editable {
+    style.push_str("cursor: pointer;");
+  }
   view! {
-    <div class="px-1 rounded-sm cursor-pointer shadow-sm" style=style>
+    <div class="px-1 rounded-sm shadow-sm whitespace-nowrap" style=style>
       {event.name}
     </div>
   }
@@ -240,6 +253,7 @@ pub struct EventInfo {
   pub date: NaiveDate,
   pub start: usize,
   pub end: usize,
+  pub editable: bool,
 }
 
 fn get_events(date: NaiveDate, event: EventGroup) -> Vec<EventInfo> {
@@ -265,6 +279,7 @@ fn get_events(date: NaiveDate, event: EventGroup) -> Vec<EventInfo> {
           date,
           start,
           end,
+          editable: event.editable,
         });
       }
     }

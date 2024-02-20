@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use chinese_lunisolar_calendar::LunisolarDate;
 use chrono::{Datelike, Local, NaiveDate, NaiveDateTime};
 use gloo::console::info;
@@ -6,6 +8,8 @@ use leptos::{spawn_local, RwSignal, SignalGet, SignalGetUntracked, SignalSet};
 use crate::event::{
   create_holiday_events, fetch_holiday_events, EventGroup, CHINESE_HOLIDAYS_NAME,
 };
+
+static HOLIDAY_FETCHED: Mutex<Vec<String>> = Mutex::new(Vec::new());
 
 #[derive(Debug, PartialEq, Clone, Copy)]
 pub struct App {
@@ -62,24 +66,7 @@ impl Default for App {
       selected_day: RwSignal::new(Day::new(today)),
     };
     app.update_scroll_top();
-    let events = app.events.get_untracked();
-    let holiday = events
-      .into_iter()
-      .find(|e| e.get_untracked().name == CHINESE_HOLIDAYS_NAME)
-      .unwrap();
-    let holiday_events = holiday.get_untracked().events;
-    // 如果没有当前年份的事件
-    if !holiday_events
-      .into_iter()
-      .any(|e| e.day.starts_with(&year.to_string()))
-    {
-      spawn_local(async move {
-        let es = fetch_holiday_events(year.to_string()).await;
-        let mut mut_holiday = holiday.get_untracked();
-        mut_holiday.extend_events(es);
-        holiday.set(mut_holiday);
-      });
-    }
+    app.update_holiday_info(year.to_string());
     app
   }
 }
@@ -90,6 +77,7 @@ impl App {
       NaiveDate::from_ymd_opt(self.year.get_untracked(), self.month.get_untracked(), 1).unwrap();
     let days = generate_days(day);
     self.days.set(days);
+    self.update_holiday_info(day.year().to_string())
   }
 
   pub fn get_scroll_to_day(&self, top: i32) -> Option<NaiveDateTime> {
@@ -128,6 +116,28 @@ impl App {
     } else {
       top - a
     }
+  }
+
+  fn update_holiday_info(&self, year: String) {
+    let mut holiday_fetched = HOLIDAY_FETCHED.lock().unwrap();
+    log::info!("update_holiday_info {:?}", holiday_fetched);
+    if holiday_fetched.contains(&year) {
+      return;
+    }
+    let mut new_value = holiday_fetched.clone();
+    new_value.push(year.clone());
+    *holiday_fetched = new_value;
+    let events = self.events.get_untracked();
+    let holiday = events
+      .into_iter()
+      .find(|e| e.get_untracked().name == CHINESE_HOLIDAYS_NAME)
+      .unwrap();
+    spawn_local(async move {
+      let es = fetch_holiday_events(year).await;
+      let mut mut_holiday = holiday.get_untracked();
+      mut_holiday.extend_events(es);
+      holiday.set(mut_holiday);
+    });
   }
 }
 
