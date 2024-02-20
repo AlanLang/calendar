@@ -1,11 +1,14 @@
 use chinese_lunisolar_calendar::LunarDay;
-use chrono::Datelike;
+use chrono::{Datelike, NaiveDate};
 use icondata as i;
 use leptos::{html::Div, *};
 use leptos_icons::Icon;
 use web_sys::{MouseEvent, ScrollBehavior, ScrollToOptions};
 
-use crate::app::{App, Day};
+use crate::{
+  app::{App, Day},
+  event::EventGroup,
+};
 
 #[component]
 pub fn Content() -> impl IntoView {
@@ -111,25 +114,55 @@ pub fn Content() -> impl IntoView {
         >
           <div class="relative" style=format!("height: {}px;", app.global_height)>
             <For each=move || days.get() key=|day| day.first().unwrap().timestamp let:week>
-              <div
-                class="bottom-line grid grid-cols-7 absolute top-0 left-0 right-0 transition-all"
-                data-timestamp=week[0].timestamp
-                data-date=week[0].date.to_string()
-                style=format!(
-                    "transform: translateY({}px); height: {}px",
-                    (week[0].timestamp - app.start_timestamp) / app.rate,
-                    app.item_height,
-                )
-              >
-
-                <For each=move || week.clone() key=|day| day.timestamp let:day>
-                  <CalendarDay day=day/>
-                </For>
-              </div>
+              <CalendarWeek week=week/>
             </For>
           </div>
         </div>
       </div>
+    </div>
+  }
+}
+
+#[component]
+pub fn CalendarWeek(week: Vec<Day>) -> impl IntoView {
+  let app = use_context::<App>().expect("there to be a `count` signal provided");
+  let first_day = week.clone().into_iter().next().unwrap();
+  let events =
+    create_memo(move |_| get_events(first_day.date, app.events.get().first().unwrap().get()));
+
+  view! {
+    <div
+      class="bottom-line grid grid-cols-7 absolute top-0 left-0 right-0 transition-all"
+      data-timestamp=week[0].timestamp
+      data-date=week[0].date.to_string()
+      style=format!(
+          "transform: translateY({}px); height: {}px",
+          (week[0].timestamp - app.start_timestamp) / app.rate,
+          app.item_height,
+      )
+    >
+
+      <For each=move || week.clone() key=|day| day.timestamp let:day>
+        <CalendarDay day=day/>
+      </For>
+      <div class="absolute top-9 left-0 right-0 text-sm grid grid-cols-7">
+        <For each=move || events.get() key=|event| event.name.clone() let:event>
+          <EventView event=event/>
+        </For>
+      </div>
+    </div>
+  }
+}
+
+#[component]
+pub fn EventView(event: EventInfo) -> impl IntoView {
+  let style = format!(
+    "background-color: {}; color: #FFF; grid-column: {} / {};",
+    event.color, event.start, event.end
+  );
+  view! {
+    <div class="px-1 rounded-sm cursor-pointer shadow-sm" style=style>
+      {event.name}
     </div>
   }
 }
@@ -198,4 +231,45 @@ fn get_day_text(day: &Day) -> String {
   } else {
     format!("{}", day.day)
   }
+}
+
+#[derive(Debug, PartialEq, Eq, Clone, Default)]
+pub struct EventInfo {
+  pub name: String,
+  pub color: String,
+  pub date: NaiveDate,
+  pub start: usize,
+  pub end: usize,
+}
+
+fn get_events(date: NaiveDate, event: EventGroup) -> Vec<EventInfo> {
+  let mut events: Vec<EventInfo> = vec![];
+  let mut start_index: usize = 1;
+  while start_index <= 7 {
+    let day = date + chrono::Duration::days(start_index as i64 - 1);
+    let date_str = day.to_string();
+    let day_event = event.events.clone().into_iter().find(|e| e.day == date_str);
+    if let Some(day_event) = day_event {
+      let name = day_event.title;
+      let color = event.color.clone();
+      let date = day;
+      let start = start_index;
+      let end = start_index;
+      // 如果已经有同名的了，则找到并修改 end
+      if let Some(e) = events.iter_mut().find(|e| e.name == name) {
+        e.end = start_index + 1;
+      } else {
+        events.push(EventInfo {
+          name,
+          color,
+          date,
+          start,
+          end,
+        });
+      }
+    }
+    start_index += 1;
+  }
+
+  events
 }
