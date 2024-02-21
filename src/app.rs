@@ -121,12 +121,12 @@ impl App {
   fn update_holiday_info(&self, year: String) {
     let mut holiday_fetched = HOLIDAY_FETCHED.lock().unwrap();
     log::info!("update_holiday_info {:?}", holiday_fetched);
+    
     if holiday_fetched.contains(&year) {
       return;
     }
-    let mut new_value = holiday_fetched.clone();
-    new_value.push(year.clone());
-    *holiday_fetched = new_value;
+
+    holiday_fetched.push(year.clone());
     let events = self.events.get_untracked();
     let holiday = events
       .into_iter()

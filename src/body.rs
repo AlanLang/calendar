@@ -259,12 +259,15 @@ pub struct EventInfo {
 fn get_events(date: NaiveDate, event: EventGroup) -> Vec<EventInfo> {
   let mut events: Vec<EventInfo> = vec![];
   let mut start_index: usize = 1;
+  let editable = event.editable;
+
   while start_index <= 7 {
     let day = date + chrono::Duration::days(start_index as i64 - 1);
     let date_str = day.to_string();
-    let day_event = event.events.clone().into_iter().find(|e| e.day == date_str);
+
+    let day_event = event.events.iter().find(|e| e.day == date_str);
     if let Some(day_event) = day_event {
-      let name = day_event.title;
+      let name = day_event.title.clone();
       let color = event.color.clone();
       let date = day;
       let start = start_index;
@@ -279,7 +282,7 @@ fn get_events(date: NaiveDate, event: EventGroup) -> Vec<EventInfo> {
           date,
           start,
           end,
-          editable: event.editable,
+          editable,
         });
       }
     }
